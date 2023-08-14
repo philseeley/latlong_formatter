@@ -19,10 +19,10 @@ class LatLongData {
     decDeg = value.abs();
     deg   = decDeg.toInt();
 
-    decMin = 60 * decDeg.remainder(deg);
+    decMin = 60 * (decDeg - deg);
     min = decMin.toInt();
 
-    decSec = 60 * decMin.remainder(min);
+    decSec = 60 * (decMin - min);
     sec = decSec.toInt();
   }
 }
