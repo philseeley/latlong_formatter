@@ -115,7 +115,7 @@ class _LatLongFormatter implements _Formatter {
   String _render(LatLongFormatter parent) {
     LatLongData loc = _isLat ? parent._location.latitude : parent._location.longitude;
 
-    String pad = _pad ? ((!_isLat && _latLongField == _LatLongField.degrees) ? '03' : '02') : '';
+    String pad = _pad ? ((!_isLat && _latLongField == _LatLongField.degrees) ? '0${3+_decLen+1}' : '0${2+_decLen+1}') : '';
 
     switch(_latLongField) {
       case _LatLongField.degrees:
