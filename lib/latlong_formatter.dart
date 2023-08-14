@@ -27,11 +27,11 @@ class LatLongData {
   }
 }
 
-class Location {
+class LatLong {
   late final LatLongData latitude;
   late final LatLongData longitude;
 
-  Location(double lat, double lon) {
+  LatLong(double lat, double lon) {
     latitude = LatLongData(lat);
     longitude = LatLongData(lon);
   }
@@ -141,7 +141,7 @@ class _LatLongFormatter implements _Formatter {
 class LatLongFormatter {
   final String _format;
   final List<_Formatter> _formatters = [];
-  late Location _location;
+  late LatLong _location;
   DateTime? _dateTime;
   String _username = '';
   String _password = '';
@@ -274,7 +274,7 @@ class LatLongFormatter {
     return formatters;
   }
 
-  String format(Location loc, {DateTime? dateTime, String username = '', String password = ''}) {
+  String format(LatLong loc, {DateTime? dateTime, String username = '', String password = ''}) {
     _location = loc;
     _dateTime = dateTime;
     _username = username;
