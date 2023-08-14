@@ -22,6 +22,8 @@ void main() {
     geoFormatter = LatLongFormatter('{latc0d 0m 0s.sss},{lonc0d 0m 0s.sss}');
     expect(geoFormatter.format(Location(9.99999999, 99.99999999)), 'N09 59 60.000,E099 59 60.000');
     expect(geoFormatter.format(Location(-9.99999999, -99.99999999)), 'S09 59 60.000,W099 59 60.000');
+    expect(geoFormatter.format(Location(-9.0, -9.0)), 'S09 00 00.000,W009 00 00.000');
+    expect(geoFormatter.format(Location(-9.2, -99.2)), 'S09 11 60.000,W099 12 00.000');
 
     // Predict Wind format.
     geoFormatter = LatLongFormatter('{user} {lat-d.ddddd} {lon-d.ddddd} {localyyyy-MM-dd HH:mm}{tz}');
