@@ -15,16 +15,19 @@ class LatLongData {
   late final int sec;
 
   LatLongData(this.value) {
-    //NEED TO FIX ROUNDING
     positive = value < 0 ? false : true;
 
-    decDeg = value.abs();
+    // We trim the numbers to remove rounding errors that would otherwise produce
+    // results like 9 degrees and 60 minutes, rather then 10 degrees and 0 minutes.
+    // Dart doesn't have a function for this other than formatting to a string and
+    // back to a double.
+    decDeg = double.parse(value.abs().toStringAsFixed(5));
     deg   = decDeg.toInt();
 
-    decMin = 60 * (decDeg - deg);
+    decMin = 60 * double.parse((decDeg - deg).toStringAsFixed(5));
     min = decMin.toInt();
 
-    decSec = 60 * (decMin - min);
+    decSec = 60 * double.parse((decMin - min).toStringAsFixed(5));
     sec = decSec.toInt();
   }
 }
