@@ -1,6 +1,7 @@
 library latlong_formatter;
 
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 import 'package:format/format.dart' as fmt;
 
 class LatLongData {
@@ -14,6 +15,7 @@ class LatLongData {
   late final int sec;
 
   LatLongData(this.value) {
+    //NEED TO FIX ROUNDING
     positive = value < 0 ? false : true;
 
     decDeg = value.abs();
@@ -82,14 +84,14 @@ class _TZFormatter implements _Formatter {
   }
 }
 
-class _UserFormatter implements _Formatter {
-  final bool _isPassword;
+class _IdentFormatter implements _Formatter {
+  final int _num;
 
-  _UserFormatter(this._isPassword);
+  _IdentFormatter(this._num);
 
   @override
   String _render(LatLongFormatter parent) {
-    return _isPassword ? parent._password : parent._username;
+    return parent._ident.elementAtOrNull(_num)??'';
   }
 }
 
@@ -143,8 +145,7 @@ class LatLongFormatter {
   final List<_Formatter> _formatters = [];
   late LatLong _location;
   DateTime? _dateTime;
-  String _username = '';
-  String _password = '';
+  List<String> _ident = [];
 
   LatLongFormatter(this._format) {
     _parseFormat();
@@ -157,14 +158,13 @@ class LatLongFormatter {
     RegExp(r'^\{(local)[^\}]*\}'), // 3
     RegExp(r'^\{(utc)[^\}]*\}'), // 4
     RegExp(r'^\{(tz).?\}'), // 5
-    RegExp(r'^\{(user)\}'), // 6
-    RegExp(r'^\{(pass)\}'), // 7
+    RegExp(r'^\{(ident\d*)\}'), // 6
   ];
 
   _parseFormat () {
     String todo = _format;
 
-    do {
+    while(todo.isNotEmpty) {
       bool matched = false;
       for (int i = 0; i<_pats.length; ++i) {
         RegExpMatch? match = _pats[i].firstMatch(todo);
@@ -190,20 +190,18 @@ class LatLongFormatter {
               _formatters.add(_TZFormatter(match[0]!.substring(3, len)));
               break;
             case 6:
-              _formatters.add(_UserFormatter(false));
-              break;
-            case 7:
-              _formatters.add(_UserFormatter(true));
+              _formatters.add(_IdentFormatter(int.tryParse(match[0]!.substring(6, len))??0));
               break;
           }
           matched = true;
           todo = todo.substring(match[0]!.length);
+          break;
         }
       }
       if(!matched) {
         throw Exception('Bad format at "$todo"');
       }
-    } while(todo.isNotEmpty);
+    };
   }
 
   static final List<RegExp> _latLonPats = [
@@ -220,7 +218,7 @@ class LatLongFormatter {
   List<_Formatter> _parseLatLongFormat (String format, bool isLat) {
     List<_Formatter> formatters = [];
 
-    do {
+    while(format.isNotEmpty) {
       bool matched = false;
       for (int i = 0; i<_latLonPats.length; ++i) {
         RegExpMatch? match = _latLonPats[i].firstMatch(format);
@@ -269,16 +267,15 @@ class LatLongFormatter {
       if(!matched) {
         throw Exception('Bad format at "$format"');
       }
-    } while(format.isNotEmpty);
+    }
 
     return formatters;
   }
 
-  String format(LatLong loc, {DateTime? dateTime, String username = '', String password = ''}) {
+  String format(LatLong loc, {DateTime? dateTime, List<String> ident = const [], String password = ''}) {
     _location = loc;
     _dateTime = dateTime;
-    _username = username;
-    _password = password;
+    _ident = ident;
 
     StringBuffer result = StringBuffer();
     for(final f in _formatters) {
