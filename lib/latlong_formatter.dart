@@ -87,14 +87,14 @@ class _TZFormatter implements _Formatter {
   }
 }
 
-class _IdentFormatter implements _Formatter {
+class _InfoFormatter implements _Formatter {
   final int _num;
 
-  _IdentFormatter(this._num);
+  _InfoFormatter(this._num);
 
   @override
   String _render(LatLongFormatter parent) {
-    return parent._ident.elementAtOrNull(_num)??'';
+    return parent._info.elementAtOrNull(_num)??'';
   }
 }
 
@@ -148,7 +148,7 @@ class LatLongFormatter {
   final List<_Formatter> _formatters = [];
   late LatLong _location;
   DateTime? _dateTime;
-  List<String> _ident = [];
+  List<String> _info = [];
 
   LatLongFormatter(this._format) {
     _parseFormat();
@@ -161,7 +161,7 @@ class LatLongFormatter {
     RegExp(r'^\{(local)[^\}]*\}'), // 3
     RegExp(r'^\{(utc)[^\}]*\}'), // 4
     RegExp(r'^\{(tz).?\}'), // 5
-    RegExp(r'^\{(ident\d*)\}'), // 6
+    RegExp(r'^\{(info\d*)\}'), // 6
   ];
 
   _parseFormat () {
@@ -193,7 +193,7 @@ class LatLongFormatter {
               _formatters.add(_TZFormatter(match[0]!.substring(3, len)));
               break;
             case 6:
-              _formatters.add(_IdentFormatter(int.tryParse(match[0]!.substring(6, len))??0));
+              _formatters.add(_InfoFormatter(int.tryParse(match[0]!.substring(5, len))??0));
               break;
           }
           matched = true;
@@ -275,10 +275,10 @@ class LatLongFormatter {
     return formatters;
   }
 
-  String format(LatLong loc, {DateTime? dateTime, List<String> ident = const [], String password = ''}) {
+  String format(LatLong loc, {DateTime? dateTime, List<String> info = const []}) {
     _location = loc;
     _dateTime = dateTime;
-    _ident = ident;
+    _info = info;
 
     StringBuffer result = StringBuffer();
     for(final f in _formatters) {
