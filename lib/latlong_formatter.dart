@@ -76,14 +76,21 @@ class _DateTimeFormatter implements _Formatter {
 }
 
 class _TZFormatter implements _Formatter {
-  final String _sep;
+  final String _field;
 
-  _TZFormatter(this._sep);
+  _TZFormatter(this._field);
 
   @override
   String _render(LatLongFormatter parent) {
     DateTime dt = parent._dateTime?.toLocal() ?? DateTime.now();
-    return fmt.format('{:+03d}$_sep{:02d}', dt.timeZoneOffset.inHours, dt.timeZoneOffset.inMinutes%60);
+    switch (_field) {
+      case 'h':
+        return fmt.format('{:+03d}', dt.timeZoneOffset.inHours);
+      case 'm':
+        return fmt.format('{:02d}', dt.timeZoneOffset.inMinutes % 60);
+      default: // Must be TZ name.
+        return dt.timeZoneName;
+    }
   }
 }
 
@@ -160,7 +167,7 @@ class LatLongFormatter {
     RegExp(r'^\{(lon)[^\}]*\}'), // 2
     RegExp(r'^\{(local)[^\}]*\}'), // 3
     RegExp(r'^\{(utc)[^\}]*\}'), // 4
-    RegExp(r'^\{(tz).?\}'), // 5
+    RegExp(r'^\{(tz)[hmn]\}'), // 5
     RegExp(r'^\{(info\d*)\}'), // 6
   ];
 

@@ -4,27 +4,18 @@ import 'package:latlong_formatter/latlong_formatter.dart';
 import 'package:format/format.dart' as fmt;
 
 void main() {
-  // print("${(9.2 - 9).toStringAsFixed(5)} ${(99.2 - 99).toStringAsFixed(5)}");
-  //
-  // LatLongData lat = LatLongData(9.2);
-  // LatLongData lon = LatLongData(99.2);
-  //
-  // print("${1/100000}");
-  // print("${lat.decMin}, ${lon.decMin}");
-  // print("${lat.min}, ${lon.min}");
-  // print("${lat.decSec} ${lon.decSec}");
-  // return;
   test('formatting', () {
     DateTime dt = DateTime.parse('2002-02-27T14:00:00');
     String tzh = fmt.format('{:+03d}', dt.timeZoneOffset.inHours);
     String tzm = fmt.format('{:02d}', dt.timeZoneOffset.inMinutes%60);
+    String tzn = dt.timeZoneName;
 
-    LatLongFormatter geoFormatter = LatLongFormatter('Leading\nlines\n\n{latd\u00B0m"s\' c},{lond\u00B0m"s\' c}\n{lat+0d.d m.m s.s} {lon+0d.d m.m s.s}\n{info} {info1}\nUTC={utcyyyy-MM-dd HH:mm} Local={localyyyy-MM-dd HH:mm} TZ={tz:}\n\ntrailing\nlines');
+    LatLongFormatter geoFormatter = LatLongFormatter('Leading\nlines\n\n{latd\u00B0m"s\' c},{lond\u00B0m"s\' c}\n{lat+0d.d m.m s.s} {lon+0d.d m.m s.s}\n{info} {info1}\nUTC={utcyyyy-MM-dd HH:mm} Local={localyyyy-MM-dd HH:mm} TZ={tzh}:{tzm} {tzn}\n\ntrailing\nlines');
 
     expect(geoFormatter.format(LatLong(9.99999999, 99.99999999), dateTime: dt, info: ['myUser', 'myPass']),
-        'Leading\nlines\n\n10\u00B00"0\' N,100\u00B00"0\' E\n+10.0 0.0 0.0 +100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 11:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm\n\ntrailing\nlines');
+        'Leading\nlines\n\n10\u00B00"0\' N,100\u00B00"0\' E\n+10.0 0.0 0.0 +100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 11:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm $tzn\n\ntrailing\nlines');
     expect(geoFormatter.format(LatLong(-9.99999999, -99.99999999), dateTime: dt, info: ['myUser', 'myPass']),
-        'Leading\nlines\n\n10\u00B00"0\' S,100\u00B00"0\' W\n-10.0 0.0 0.0 -100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 11:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm\n\ntrailing\nlines');
+        'Leading\nlines\n\n10\u00B00"0\' S,100\u00B00"0\' W\n-10.0 0.0 0.0 -100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 11:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm $tzn\n\ntrailing\nlines');
 
     geoFormatter = LatLongFormatter('{lat-d m s.sss},{lon-d m s.sss}');
     expect(geoFormatter.format(LatLong(9.99999999, 99.99999999)), '10 0 0.000,100 0 0.000');
@@ -37,7 +28,7 @@ void main() {
     expect(geoFormatter.format(LatLong(-9.2, -99.2)), 'S09 12 00.000,W099 12 00.000');
 
     // Predict Wind format.
-    geoFormatter = LatLongFormatter('{info} {lat-d.ddddd} {lon-d.ddddd} {localyyyy-MM-dd HH:mm}{tz}');
+    geoFormatter = LatLongFormatter('{info} {lat-d.ddddd} {lon-d.ddddd} {localyyyy-MM-dd HH:mm}{tzh}{tzm}');
     expect(geoFormatter.format(LatLong(9.99999999, 99.99999999), dateTime: dt, info: ['myUser']),
         'myUser 10.00000 100.00000 2002-02-27 14:00$tzh$tzm');
     expect(geoFormatter.format(LatLong(-9.99999999, -99.99999999), dateTime: dt, info: ['myUser']),
