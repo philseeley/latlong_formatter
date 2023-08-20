@@ -46,14 +46,14 @@ Would output:
 ```
 ## Templates
 Templates are free format with fields enclosed in '{}':
-- {lat<loc format>} -- Latitude.
-- {lon<loc format>} -- Longitude.
-- {local<time format>} -- Local time.
-- {utc<time format>} -- Time in UTC.
+- {lat\<loc format\>} -- Latitude.
+- {lon\<loc format\>} -- Longitude.
+- {local\<time format\>} -- Local time.
+- {utc\<time format\>} -- Time in UTC.
 - {tz[hmn]+} -- Local Time Zone, e.g. 'h' gives "+06", 'm' gives "30" and 'n' gives "CCT".
 - {info[index]?} -- Additional information line indexed from 0 (0 is optional).
 
-Where **<loc format>** can be:
+Where **\<loc format\>** can be:
 - [0]d -- degrees
 - [0]d.d[dddd] -- decimal degrees
 - [0]m -- minutes
@@ -68,4 +68,4 @@ A leading "0" will pad the field to a fixed length.
 
 **Note:** the decimal fields are internally rounded to 5 decimal places, so specifying more decimal places will not increase accuracy. This gives an accuracy of ~1m per-degree and ~2cm per-minute.
 
-The **<time format>** can be anything defined for the [DataFormat](https://api.flutter.dev/flutter/intl/DateFormat-class.html) class.
+The **\<time format\>** can be anything defined for the [DataFormat](https://api.flutter.dev/flutter/intl/DateFormat-class.html) class.
