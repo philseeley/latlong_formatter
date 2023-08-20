@@ -2,23 +2,33 @@ import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 import 'package:format/format.dart' as fmt;
 
+/// Breaks out a Latitude of Longitude value into its Degrees, Minutes and Seconds.
+///
+/// The decimal values are rounded to 5 decimal places to avoid unexpected rounding errors.
+/// e.g. 9 degrees and 60 minutes (bad), rather then 10 degrees and 0 minutes (good).
 class LatLongData {
+  /// Lat/Long value.
   final double value;
+  /// Whether the [value] is positive, i.e. N or E.
   late final bool positive;
+  /// Decimal Degrees.
   late final double decDeg;
+  /// Degrees.
   late final int deg;
+  /// Decimal Minutes.
   late final double decMin;
+  /// Minutes.
   late final int min;
+  /// Decimal Seconds.
   late final double decSec;
+  /// Seconds.
   late final int sec;
 
   LatLongData(this.value) {
     positive = value < 0 ? false : true;
 
-    // We trim the numbers to remove rounding errors that would otherwise produce
-    // results like 9 degrees and 60 minutes, rather then 10 degrees and 0 minutes.
-    // Dart doesn't have a function for this other than formatting to a string and
-    // back to a double.
+    // Dart doesn't have a function for rounding to a fixed decimal other than
+    // formatting to a string and back to a double.
     decDeg = double.parse(value.abs().toStringAsFixed(5));
     deg   = decDeg.toInt();
 
@@ -30,6 +40,7 @@ class LatLongData {
   }
 }
 
+/// Holds a Lat/Long pair in their [LatLongData] expanded form.
 class LatLong {
   late final LatLongData latitude;
   late final LatLongData longitude;
@@ -148,6 +159,7 @@ class _LatLongFormatter implements _Formatter {
   }
 }
 
+/// Formats Latitude and Longitude values to a given template.
 class LatLongFormatter {
   final String _format;
   final List<_Formatter> _formatters = [];
@@ -280,6 +292,7 @@ class LatLongFormatter {
     return formatters;
   }
 
+  /// If [dateTime] is not given, [DateTime.now()] is used.
   String format(LatLong loc, {DateTime? dateTime, List<String> info = const []}) {
     _location = loc;
     _dateTime = dateTime;

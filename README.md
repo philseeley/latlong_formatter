@@ -50,16 +50,16 @@ Templates are free format with fields enclosed in '{}':
 - {lon\<loc format\>} -- Longitude.
 - {local\<time format\>} -- Local time.
 - {utc\<time format\>} -- Time in UTC.
-- {tz[hmn]+} -- Local Time Zone, e.g. 'h' gives "+06", 'm' gives "30" and 'n' gives "CCT".
-- {info[index]?} -- Additional information line indexed from 0 (0 is optional).
+- {tz\[hmn\]+} -- Local Time Zone, e.g. 'h' gives "+06", 'm' gives "30" and 'n' gives "CCT".
+- {info\[index\]?} -- Additional information line indexed from 0 (0 is optional).
 
 Where **\<loc format\>** can be:
-- [0]d -- degrees
-- [0]d.d[dddd] -- decimal degrees
-- [0]m -- minutes
-- [0]m.m[mmmm] -- decimal minutes
-- [0]s -- seconds
-- [0]s.s[ssss] -- decimal seconds
+- \[0\]d -- degrees
+- \[0\]d.d\[dddd\] -- decimal degrees
+- \[0\]m -- minutes
+- \[0\]m.m\[mmmm\] -- decimal minutes
+- \[0\]s -- seconds
+- \[0\]s.s\[ssss\] -- decimal seconds
 - c -- cardinal direction, i.e. N,S,E or W.
 - \\- -- a "-" when South or West.
 - \\+ -- a "+" when North or East and "-" when South or West.
