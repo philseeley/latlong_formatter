@@ -19,7 +19,7 @@ void main() {
 }
 ```
 Would output:
-```
+```plaintext
 Hi Fred,
 
 On 2023-08-20 at 07:45 UTC, SV Billy Do is at:
@@ -39,7 +39,7 @@ and:
   print(llf.format(ll));
 ```
 Would output:
-```
+```plaintext
 5°20"45' N,10°47"2' W
 5°20"45',-10°47"2'
 +5°20"45',-10°47"2'
