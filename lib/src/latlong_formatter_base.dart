@@ -221,7 +221,7 @@ class LatLongFormatter {
       if(!matched) {
         throw Exception('Bad format at "$todo"');
       }
-    };
+    }
   }
 
   static final List<RegExp> _latLonPats = [

@@ -9,14 +9,7 @@ void main() {
     String tzm = fmt.format('{:02d}', dt.timeZoneOffset.inMinutes%60);
     String tzn = dt.timeZoneName;
 
-    LatLongFormatter geoFormatter = LatLongFormatter('Leading\nlines\n\n{latd\u00B0m"s\' c},{lond\u00B0m"s\' c}\n{lat+0d.d m.m s.s} {lon+0d.d m.m s.s}\n{info} {info1}\nUTC={utcyyyy-MM-dd HH:mm} Local={localyyyy-MM-dd HH:mm} TZ={tzh}:{tzm} {tzn}\n\ntrailing\nlines');
-
     test('Formatting', () {
-      DateTime dt = DateTime.parse('2002-02-27T14:00:00');
-      String tzh = fmt.format('{:+03d}', dt.timeZoneOffset.inHours);
-      String tzm = fmt.format('{:02d}', dt.timeZoneOffset.inMinutes%60);
-      String tzn = dt.timeZoneName;
-
       LatLongFormatter latLongFormatter = LatLongFormatter('Leading\nlines\n\n{latd\u00B0m"s\' c},{lond\u00B0m"s\' c}\n{lat+0d.d m.m s.s} {lon+0d.d m.m s.s}\n{info} {info1}\nUTC={utcyyyy-MM-dd HH:mm} Local={localyyyy-MM-dd HH:mm} TZ={tzh}:{tzm} {tzn}\n\ntrailing\nlines');
 
       expect(latLongFormatter.format(LatLong(9.99999999, 99.99999999), dateTime: dt, info: ['myUser', 'myPass']),

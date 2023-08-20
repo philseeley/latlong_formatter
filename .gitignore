@@ -2,6 +2,7 @@
 # Created by `dart pub`
 .dart_tool/
 .idea
+.DS_Store
 build
 doc
 
