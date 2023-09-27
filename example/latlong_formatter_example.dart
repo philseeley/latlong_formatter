@@ -10,9 +10,6 @@ void main() {
   llf = LatLongFormatter('{latd\u00B0m"s\' c},{lond\u00B0m"s\' c}');
   print(llf.format(ll));
 
-  llf = LatLongFormatter('{latd\u00B0m"s\' c},{lond\u00B0m"s\' c}');
-  print(llf.format(ll));
-
   llf = LatLongFormatter('{lat-d\u00B0m"s\'},{lon-d\u00B0m"s\'}');
   print(llf.format(ll));
 
