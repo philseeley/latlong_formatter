@@ -13,9 +13,9 @@ void main() {
       LatLongFormatter latLongFormatter = LatLongFormatter('Leading\nlines\n\n{latd\u00B0m"s\' c},{lond\u00B0m"s\' c}\n{lat+0d.d m.m s.s} {lon+0d.d m.m s.s}\n{info} {info1}\nUTC={utcyyyy-MM-dd HH:mm} Local={localyyyy-MM-dd HH:mm} TZ={tzh}:{tzm} {tzn}\n\ntrailing\nlines');
 
       expect(latLongFormatter.format(LatLong(9.99999999, 99.99999999), dateTime: dt, info: ['myUser', 'myPass']),
-          'Leading\nlines\n\n10\u00B00"0\' N,100\u00B00"0\' E\n+10.0 0.0 0.0 +100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 11:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm $tzn\n\ntrailing\nlines');
+          'Leading\nlines\n\n10\u00B00"0\' N,100\u00B00"0\' E\n+10.0 0.0 0.0 +100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 14:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm $tzn\n\ntrailing\nlines');
       expect(latLongFormatter.format(LatLong(-9.99999999, -99.99999999), dateTime: dt, info: ['myUser', 'myPass']),
-          'Leading\nlines\n\n10\u00B00"0\' S,100\u00B00"0\' W\n-10.0 0.0 0.0 -100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 11:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm $tzn\n\ntrailing\nlines');
+          'Leading\nlines\n\n10\u00B00"0\' S,100\u00B00"0\' W\n-10.0 0.0 0.0 -100.0 0.0 0.0\nmyUser myPass\nUTC=2002-02-27 14:00 Local=2002-02-27 14:00 TZ=$tzh:$tzm $tzn\n\ntrailing\nlines');
 
       latLongFormatter = LatLongFormatter('{lat-d m s.sss},{lon-d m s.sss}');
       expect(latLongFormatter.format(LatLong(9.99999999, 99.99999999)), '10 0 0.000,100 0 0.000');
