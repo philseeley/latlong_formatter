@@ -9,18 +9,25 @@ import 'package:format/format.dart' as fmt;
 class LatLongData {
   /// Lat/Long value.
   final double value;
+
   /// Whether the [value] is positive, i.e. N or E.
   late final bool positive;
+
   /// Decimal Degrees.
   late final double decDeg;
+
   /// Degrees.
   late final int deg;
+
   /// Decimal Minutes.
   late final double decMin;
+
   /// Minutes.
   late final int min;
+
   /// Decimal Seconds.
   late final double decSec;
+
   /// Seconds.
   late final int sec;
 
@@ -30,7 +37,7 @@ class LatLongData {
     // Dart doesn't have a function for rounding to a fixed decimal other than
     // formatting to a string and back to a double.
     decDeg = double.parse(value.abs().toStringAsFixed(5));
-    deg   = decDeg.toInt();
+    deg = decDeg.toInt();
 
     decMin = 60 * double.parse((decDeg - deg).toStringAsFixed(5));
     min = decMin.toInt();
@@ -77,7 +84,7 @@ class _DateTimeFormatter implements _Formatter {
   @override
   String _render(LatLongFormatter parent) {
     DateTime dt = parent._dateTime ?? DateTime.now();
-    if(_utc) {
+    if (_utc) {
       return _dateFormat.format(dt.toUtc());
     }
     return _dateFormat.format(dt);
@@ -110,18 +117,11 @@ class _InfoFormatter implements _Formatter {
 
   @override
   String _render(LatLongFormatter parent) {
-    return parent._info.elementAtOrNull(_num)??'';
+    return parent._info.elementAtOrNull(_num) ?? '';
   }
 }
 
-enum _LatLongField {
-  degrees,
-  minutes,
-  seconds,
-  plus,
-  minus,
-  cardinal
-}
+enum _LatLongField { degrees, minutes, seconds, plus, minus, cardinal }
 
 class _LatLongFormatter implements _Formatter {
   final _LatLongField _latLongField;
@@ -130,27 +130,39 @@ class _LatLongFormatter implements _Formatter {
   final bool _pad;
   final int _decLen;
 
-  _LatLongFormatter(this._latLongField, this._isLat, this._isDecimal, this._pad, this._decLen);
+  _LatLongFormatter(this._latLongField, this._isLat, this._isDecimal, this._pad,
+      this._decLen);
 
   @override
   String _render(LatLongFormatter parent) {
-    LatLongData loc = _isLat ? parent._location.latitude : parent._location.longitude;
+    LatLongData loc =
+        _isLat ? parent._location.latitude : parent._location.longitude;
 
-    String pad = _pad ? ((!_isLat && _latLongField == _LatLongField.degrees) ? '0${3+_decLen+1}' : '0${2+_decLen+1}') : '';
+    String pad = _pad
+        ? ((!_isLat && _latLongField == _LatLongField.degrees)
+            ? '0${3 + _decLen + 1}'
+            : '0${2 + _decLen + 1}')
+        : '';
 
-    switch(_latLongField) {
+    switch (_latLongField) {
       case _LatLongField.degrees:
-        return _isDecimal ? fmt.format('{:$pad.${_decLen}f}', loc.decDeg) : fmt.format('{:${pad}d}', loc.deg);
+        return _isDecimal
+            ? fmt.format('{:$pad.${_decLen}f}', loc.decDeg)
+            : fmt.format('{:${pad}d}', loc.deg);
       case _LatLongField.minutes:
-        return _isDecimal ? fmt.format('{:$pad.${_decLen}f}', loc.decMin) : fmt.format('{:${pad}d}', loc.min);
+        return _isDecimal
+            ? fmt.format('{:$pad.${_decLen}f}', loc.decMin)
+            : fmt.format('{:${pad}d}', loc.min);
       case _LatLongField.seconds:
-        return _isDecimal ? fmt.format('{:$pad.${_decLen}f}', loc.decSec) : fmt.format('{:${pad}d}', loc.sec);
+        return _isDecimal
+            ? fmt.format('{:$pad.${_decLen}f}', loc.decSec)
+            : fmt.format('{:${pad}d}', loc.sec);
       case _LatLongField.plus:
         return loc.positive ? '+' : '-';
       case _LatLongField.minus:
         return loc.positive ? '' : '-';
       case _LatLongField.cardinal:
-        if(_isLat) {
+        if (_isLat) {
           return loc.positive ? 'N' : 'S';
         } else {
           return loc.positive ? 'E' : 'W';
@@ -181,36 +193,41 @@ class LatLongFormatter {
     RegExp(r'^\{(info\d*)\}'), // 6
   ];
 
-  _parseFormat () {
+  _parseFormat() {
     String todo = _format;
 
-    while(todo.isNotEmpty) {
+    while (todo.isNotEmpty) {
       bool matched = false;
-      for (int i = 0; i<_pats.length; ++i) {
+      for (int i = 0; i < _pats.length; ++i) {
         RegExpMatch? match = _pats[i].firstMatch(todo);
         if (match != null) {
-          int len = match[0]!.length-1;
-          switch(i) {
+          int len = match[0]!.length - 1;
+          switch (i) {
             case 0:
               _formatters.add(_LiteralFormatter(match[0]!));
               break;
             case 1:
-              _formatters.addAll(_parseLatLongFormat(match[0]!.substring(4, len), true));
+              _formatters.addAll(
+                  _parseLatLongFormat(match[0]!.substring(4, len), true));
               break;
             case 2:
-              _formatters.addAll(_parseLatLongFormat(match[0]!.substring(4, len), false));
+              _formatters.addAll(
+                  _parseLatLongFormat(match[0]!.substring(4, len), false));
               break;
             case 3:
-              _formatters.add(_DateTimeFormatter(match[0]!.substring(6, len), false));
+              _formatters
+                  .add(_DateTimeFormatter(match[0]!.substring(6, len), false));
               break;
             case 4:
-              _formatters.add(_DateTimeFormatter(match[0]!.substring(4, len), true));
+              _formatters
+                  .add(_DateTimeFormatter(match[0]!.substring(4, len), true));
               break;
             case 5:
               _formatters.add(_TZFormatter(match[0]!.substring(3, len)));
               break;
             case 6:
-              _formatters.add(_InfoFormatter(int.tryParse(match[0]!.substring(5, len))??0));
+              _formatters.add(_InfoFormatter(
+                  int.tryParse(match[0]!.substring(5, len)) ?? 0));
               break;
           }
           matched = true;
@@ -218,7 +235,7 @@ class LatLongFormatter {
           break;
         }
       }
-      if(!matched) {
+      if (!matched) {
         throw Exception('Bad format at "$todo"');
       }
     }
@@ -235,45 +252,60 @@ class LatLongFormatter {
     RegExp(r'^[^dms0c+-]+'), // 7
   ];
 
-  List<_Formatter> _parseLatLongFormat (String format, bool isLat) {
+  List<_Formatter> _parseLatLongFormat(String format, bool isLat) {
     List<_Formatter> formatters = [];
 
-    while(format.isNotEmpty) {
+    while (format.isNotEmpty) {
       bool matched = false;
-      for (int i = 0; i<_latLonPats.length; ++i) {
+      for (int i = 0; i < _latLonPats.length; ++i) {
         RegExpMatch? match = _latLonPats[i].firstMatch(format);
         if (match != null) {
           bool pad = false;
           int decPos = 1;
 
-          if(match[0]![0] == '0'){
+          if (match[0]![0] == '0') {
             pad = true;
             decPos = 2;
           }
 
-          int decLen = match[0]!.length-1-decPos;
+          int decLen = match[0]!.length - 1 - decPos;
 
-          switch(i) {
+          switch (i) {
             case 0:
-              formatters.add(_LatLongFormatter(_LatLongField.degrees, isLat, true, pad, decLen));
+              formatters.add(_LatLongFormatter(
+                  _LatLongField.degrees, isLat, true, pad, decLen));
               break;
             case 1:
-              formatters.add(_LatLongFormatter(_LatLongField.degrees, isLat, false, pad, decLen));
+              formatters.add(_LatLongFormatter(
+                  _LatLongField.degrees, isLat, false, pad, decLen));
               break;
             case 2:
-              formatters.add(_LatLongFormatter(_LatLongField.minutes, isLat, true, pad, decLen));
+              formatters.add(_LatLongFormatter(
+                  _LatLongField.minutes, isLat, true, pad, decLen));
               break;
             case 3:
-              formatters.add(_LatLongFormatter(_LatLongField.minutes, isLat, false, pad, decLen));
+              formatters.add(_LatLongFormatter(
+                  _LatLongField.minutes, isLat, false, pad, decLen));
               break;
             case 4:
-              formatters.add(_LatLongFormatter(_LatLongField.seconds, isLat, true, pad, decLen));
+              formatters.add(_LatLongFormatter(
+                  _LatLongField.seconds, isLat, true, pad, decLen));
               break;
             case 5:
-              formatters.add(_LatLongFormatter(_LatLongField.seconds, isLat, false, pad, decLen));
+              formatters.add(_LatLongFormatter(
+                  _LatLongField.seconds, isLat, false, pad, decLen));
               break;
             case 6:
-              formatters.add(_LatLongFormatter(match[0]! == '+' ? _LatLongField.plus : (match[0]! == '-' ? _LatLongField.minus : _LatLongField.cardinal), isLat, false, pad, decLen));
+              formatters.add(_LatLongFormatter(
+                  match[0]! == '+'
+                      ? _LatLongField.plus
+                      : (match[0]! == '-'
+                          ? _LatLongField.minus
+                          : _LatLongField.cardinal),
+                  isLat,
+                  false,
+                  pad,
+                  decLen));
               break;
             case 7:
               formatters.add(_LiteralFormatter(match[0]!));
@@ -284,7 +316,7 @@ class LatLongFormatter {
           break;
         }
       }
-      if(!matched) {
+      if (!matched) {
         throw Exception('Bad format at "$format"');
       }
     }
@@ -293,13 +325,14 @@ class LatLongFormatter {
   }
 
   /// If [dateTime] is not given, [DateTime.now()] is used.
-  String format(LatLong loc, {DateTime? dateTime, List<String> info = const []}) {
+  String format(LatLong loc,
+      {DateTime? dateTime, List<String> info = const []}) {
     _location = loc;
     _dateTime = dateTime;
     _info = info;
 
     StringBuffer result = StringBuffer();
-    for(final f in _formatters) {
+    for (final f in _formatters) {
       result.write(f._render(this));
     }
     return result.toString();
