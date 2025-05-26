@@ -1,6 +1,6 @@
 name: latlong_formatter
 description: String formatting for Latitudes and Longitudes using templating.
-version: 2.0.1
+version: 2.0.2
 repository: https://github.com/philseeley/latlong_formatter
 
 environment:
@@ -8,9 +8,9 @@ environment:
 
 dependencies:
   collection: ^1.17.0
-  intl: ^0.19.0
+  intl: ^0.20.2
   format: ^1.2.0
 
 dev_dependencies:
-  lints: ^4.0.0
+  lints: ^5.1.1
   test: ^1.21.0
